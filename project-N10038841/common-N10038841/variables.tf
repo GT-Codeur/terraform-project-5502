@@ -1,0 +1,8 @@
+variable "resource_group" {}
+variable "location" {}
+variable "log_ana_wps_name" {}
+variable "vault_name" {}
+variable "sku" {}
+variable "storage_account_name" {}
+variable "account_replication_type" {}
+variable "account_tier" {}
