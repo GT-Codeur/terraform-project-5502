@@ -1,0 +1,23 @@
+output "avset" {
+  value = azurerm_availability_set.avset.name
+}
+
+output "linux_vm_ids" {
+  value = [for vm in azurerm_linux_virtual_machine.linux_vm : vm.id]
+}
+
+output "linux_private_ip" {
+  value = [for nic in azurerm_network_interface.linux_nic : nic.private_ip_address]
+}
+
+output "linux_public_ip" {
+  value = [for pip in azurerm_public_ip.linux_pip : pip.ip_address]
+}
+
+output "linux_hostnames" {
+  value = [for vm in azurerm_linux_virtual_machine.linux_vm : vm.name]
+}
+
+output "vm_fqdn" {
+  value = [for pip in azurerm_public_ip.linux_pip : pip.fqdn]
+}
