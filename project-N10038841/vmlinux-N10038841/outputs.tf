@@ -18,6 +18,6 @@ output "linux_hostnames" {
   value = [for vm in azurerm_linux_virtual_machine.linux_vm : vm.name]
 }
 
-output "vm_fqdn" {
+output "linux_FQDNs" {
   value = [for pip in azurerm_public_ip.linux_pip : pip.fqdn]
 }

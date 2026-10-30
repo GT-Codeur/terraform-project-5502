@@ -5,39 +5,41 @@ resource "azurerm_availability_set" "avset" {
 }
 
 resource "azurerm_public_ip" "linux_pip" {
-  count               = var.nb_count
-  name                = "${var.linux_name}-${count.index}-pip"
+  for_each            = var.linux_vms
+  name                = "${each.key}-pip"
   location            = var.location
-  resource_group_name = var.rg_linux
+  resource_group_name = var.resource_group
+  zones               = [each.value.zone]
+  sku                 = var.sku
 
   allocation_method = "Static"
 
-  domain_name_label = "dns-${var.linux_name}-${count.index}"
+  domain_name_label = "dns-${each.key}-${var.dns_label_suffix}"
   tags              = var.tags
 }
 
 resource "azurerm_network_interface" "linux_nic" {
-  count               = var.nb_count
-  name                = "${var.linux_name}-${count.index}-nic"
+  for_each            = var.linux_vms
+  name                = "${each.key}-nic"
   location            = var.location
-  resource_group_name = var.rg_linux
+  resource_group_name = var.resource_group
 
   ip_configuration {
-    name                          = "${var.linux_name}-${count.index}-ipconfig"
+    name                          = "${each.key}-ipconfig"
     subnet_id                     = var.subnet_id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.linux_pip[count.index].id
+    public_ip_address_id          = azurerm_public_ip.linux_pip[each.key].id
   }
 
   tags = var.tags
 }
 
 resource "azurerm_linux_virtual_machine" "linux_vm" {
-  count               = var.nb_count
-  name                = "${var.linux_name}-${count.index}"
-  computer_name       = "${var.linux_name}-${count.index}"
+  for_each            = var.linux_vms
+  name                = each.key
+  computer_name       = each.key
   location            = var.location
-  resource_group_name = var.rg_linux
+  resource_group_name = var.resource_group
   availability_set_id = azurerm_availability_set.avset.id
   depends_on          = [azurerm_availability_set.avset]
 
@@ -45,7 +47,7 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
   admin_username = var.linux_admin_username
 
   network_interface_ids = [
-    element(azurerm_network_interface.linux_nic[*].id, count.index)
+    azurerm_network_interface.linux_nic[each.key].id
   ]
 
   admin_ssh_key {
@@ -54,7 +56,7 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
   }
 
   os_disk {
-    name                 = "${var.linux_name}-${count.index}-os-disk"
+    name                 = "${each.key}-os-disk"
     caching              = var.linux_caching
     storage_account_type = var.linux_storage_account_type
     disk_size_gb         = var.linux_disk_size_gb
@@ -66,6 +68,40 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
     sku       = var.linux_sku
     version   = var.linux_version
   }
+
+  boot_diagnostics {
+    storage_account_uri = var.storage_account_primary_blob_endpoint
+  }
+
+  tags = var.tags
+}
+
+resource "azurerm_virtual_machine_extension" "network_watcher" {
+  for_each = var.linux_vms
+
+  name               = var.network_watcher_name
+  virtual_machine_id = azurerm_linux_virtual_machine.linux_vm[each.key].id
+
+  publisher            = var.network_watcher_publisher
+  type                 = var.network_watcher_type
+  type_handler_version = var.network_watcher_type_handler_version
+
+  auto_upgrade_minor_version = true
+
+  tags = var.tags
+}
+
+resource "azurerm_virtual_machine_extension" "azure_monitor" {
+  for_each = var.linux_vms
+
+  name               = var.azure_monitor_name
+  virtual_machine_id = azurerm_linux_virtual_machine.linux_vm[each.key].id
+
+  publisher            = var.azure_monitor_publisher
+  type                 = var.azure_monitor_type
+  type_handler_version = var.azure_monitor_type_handler_version
+
+  auto_upgrade_minor_version = true
 
   tags = var.tags
 }
