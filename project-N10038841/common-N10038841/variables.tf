@@ -6,3 +6,4 @@ variable "sku" {}
 variable "storage_account_name" {}
 variable "account_replication_type" {}
 variable "account_tier" {}
+variable "tags" {}
