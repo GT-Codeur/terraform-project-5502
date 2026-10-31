@@ -3,12 +3,7 @@ variable "resource_group_name" {}
 variable "location" {}
 
 variable "vm_ids" {
-  type        = list(string)
-
-  validation {
-    condition     = length(var.vm_ids) == 4
-    error_message = "Exactly four VM IDs must be provided."
-  }
+  type = list(string)
 }
 
 variable "disk_size_gb" {
@@ -18,5 +13,5 @@ variable "disk_size_gb" {
 }
 
 variable "tags" {
-  type        = map(string)
+  type = map(string)
 }

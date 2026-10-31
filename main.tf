@@ -62,7 +62,7 @@ module "vmlinux-N10038841" {
   azure_monitor_name                   = "AzureMonitorLinuxAgent"
   azure_monitor_publisher              = "Microsoft.Azure.Monitor"
   azure_monitor_type                   = "AzureMonitorLinuxAgent"
-  azure_monitor_type_handler_version   = "1.0"
+  azure_monitor_type_handler_version   = "1.22"
 
   storage_account_primary_blob_endpoint = (
     module.common-N10038841.storage_account_primary_blob_endpoint
@@ -86,6 +86,7 @@ module "vmwindows-N10038841" {
     sku       = "2022-Datacenter"
     version   = "latest"
   }
+  dns_label_suffix                 = random_string.dns_suffix.result
   windows_caching                  = "ReadWrite"
   windows_disk_size_gb             = 128
   windows_storage_account_type     = "StandardSSD_LRS"
@@ -97,8 +98,8 @@ module "vmwindows-N10038841" {
   storage_account_primary_blob_endpoint = (
     module.common-N10038841.storage_account_primary_blob_endpoint
   )
-  vm_size = "Standard_B1s"
-  tags = local.tags
+  vm_size = "Standard_B2s"
+  tags    = local.tags
 
 }
 
@@ -115,6 +116,8 @@ module "datadisk-N10038841" {
 
   disk_size_gb = 10
 
+  depends_on = [module.vmlinux-N10038841, module.vmwindows-N10038841]
+
   tags = local.tags
 }
 
@@ -124,7 +127,8 @@ module "loadbalancer-N10038841" {
   resource_group_name = module.rgroup-N10038841.resource_group_name
   location            = "indiasouthcentral"
 
-  linux_nic_ids = module.vmlinux-N10038841.linux_nic_ids
+  linux_nic_ids       = module.vmlinux-N10038841.linux_nic_ids
+  linux_ip_conf_names = module.vmlinux-N10038841.linux_ip_conf_names
 
   dns_label_suffix = random_string.dns_suffix.result
 
@@ -135,9 +139,9 @@ module "database-N10038841" {
   source = "./project-N10038841/database-N10038841"
 
   resource_group_name = module.rgroup-N10038841.resource_group_name
-  location            = "indiasouthcentral"
+  location            = "canadacentral"
 
-  server_name = "pg-humber-${random_string.dns_suffix.result}"
+  server_name = "8841-pg-${random_string.dns_suffix.result}"
 
   administrator_login    = "pgadminuser"
   administrator_password = "P@ssw0rd1234!"

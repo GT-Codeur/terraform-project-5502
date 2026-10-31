@@ -55,9 +55,9 @@ output "windows_public_ip_address" {
 }
 
 output "load_balancer_name" {
-  value       = module.loadbalancer-N10038841.load_balancer_name
+  value = module.loadbalancer-N10038841.load_balancer_name
 }
 
 output "postgresql_server_name" {
-  value       = module.database-N10038841.postgresql_server_name
+  value = module.database-N10038841.postgresql_server_name
 }

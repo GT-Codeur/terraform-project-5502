@@ -39,6 +39,6 @@ resource "azurerm_network_interface_backend_address_pool_association" "linux_bac
   count = length(var.linux_nic_ids)
 
   network_interface_id    = var.linux_nic_ids[count.index]
-  ip_configuration_name   = "internal"
+  ip_configuration_name   = var.linux_ip_conf_names[count.index]
   backend_address_pool_id = azurerm_lb_backend_address_pool.linux_backend_pool.id
 }

@@ -101,7 +101,8 @@ resource "azurerm_virtual_machine_extension" "azure_monitor" {
   type                 = var.azure_monitor_type
   type_handler_version = var.azure_monitor_type_handler_version
 
-  auto_upgrade_minor_version = true
+  auto_upgrade_minor_version = false
+  automatic_upgrade_enabled  = false
 
   tags = var.tags
 }
