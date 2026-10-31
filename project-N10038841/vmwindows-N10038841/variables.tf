@@ -39,3 +39,4 @@ variable "antimalware_name" {}
 variable "antimalware_publisher" {}
 variable "antimalware_type" {}
 variable "antimalware_type_handler_version" {}
+variable "dns_label_suffix" {}

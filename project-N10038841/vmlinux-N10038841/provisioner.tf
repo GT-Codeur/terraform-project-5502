@@ -1,4 +1,4 @@
-resource "terraform_data" "linux_provisioner" {
+resource "null_resource" "linux_provisioner" {
   for_each   = var.linux_vms
   depends_on = [azurerm_linux_virtual_machine.linux_vm]
 
@@ -11,6 +11,6 @@ resource "terraform_data" "linux_provisioner" {
   }
 
   provisioner "remote-exec" {
-    inline = ["cat /etc/os-release"]
+    inline = ["hostname"]
   }
 }

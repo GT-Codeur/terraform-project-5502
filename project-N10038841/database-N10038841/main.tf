@@ -2,6 +2,7 @@ resource "azurerm_postgresql_flexible_server" "database" {
   name                = var.server_name
   resource_group_name = var.resource_group_name
   location            = var.location
+  zone                = null
 
   version = var.postgresql_version
 
@@ -15,6 +16,13 @@ resource "azurerm_postgresql_flexible_server" "database" {
   geo_redundant_backup_enabled = false
 
   public_network_access_enabled = true
+
+  lifecycle {
+    ignore_changes = [
+      zone,
+      high_availability[0].standby_availability_zone
+    ]
+  }
 
   tags = var.tags
 }

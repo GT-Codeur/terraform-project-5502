@@ -9,15 +9,15 @@ locals {
 
 locals {
   linux_vms = {
-    linux-vm-1 = {
+    linux-vm-1-8841 = {
       zone = "1"
     }
 
-    linux-vm-2 = {
+    linux-vm-2-8841 = {
       zone = "2"
     }
 
-    linux-vm-3 = {
+    linux-vm-3-8841 = {
       zone = "3"
     }
   }

@@ -27,7 +27,7 @@ resource "azurerm_windows_virtual_machine" "windows_vm" {
 
   # Maps each specific VM instance to its corresponding key-indexed network interface
   network_interface_ids = [
-    element(azurerm_network_interface.windows_nic[*].id, count.index + 1)
+    azurerm_network_interface.windows_nic[count.index].id
   ]
 
   winrm_listener {
@@ -81,7 +81,7 @@ resource "azurerm_public_ip" "windows_pip" {
 
   allocation_method = "Static"
 
-  domain_name_label = "dns-win-${lower(count.index + 1)}"
+  domain_name_label = "dns-win-${var.dns_label_suffix}"
 
   tags = var.tags
 }

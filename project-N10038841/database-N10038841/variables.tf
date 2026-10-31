@@ -3,7 +3,7 @@ variable "resource_group_name" {}
 variable "location" {}
 
 variable "server_name" {
-  type        = string
+  type = string
 
   validation {
     condition = (
@@ -18,35 +18,35 @@ variable "server_name" {
 }
 
 variable "administrator_login" {
-  type        = string
-  default     = "pgadminuser"
+  type    = string
+  default = "pgadminuser"
 }
 
 variable "administrator_password" {
-  type        = string
-  sensitive   = true
+  type      = string
+  sensitive = true
 }
 
 variable "postgresql_version" {
-  type        = string
-  default     = "16"
+  type    = string
+  default = "16"
 }
 
 variable "sku_name" {
-  type        = string
-  default     = "B_Standard_B1ms"
+  type    = string
+  default = "Standard_B1ms"
 }
 
 variable "storage_mb" {
-  type        = number
-  default     = 32768
+  type    = number
+  default = 32768
 }
 
 variable "backup_retention_days" {
-  type        = number
-  default     = 7
+  type    = number
+  default = 7
 }
 
 variable "tags" {
-  type        = map(string)
+  type = map(string)
 }

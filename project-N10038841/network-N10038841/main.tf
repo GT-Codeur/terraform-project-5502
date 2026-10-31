@@ -8,7 +8,7 @@ resource "azurerm_virtual_network" "vnet" {
 resource "azurerm_subnet" "subnet" {
   name                 = var.subnet_name
   resource_group_name  = var.resource_group_name
-  virtual_network_name = var.virtual_network_name
+  virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = var.subnet_address_space
 }
 
@@ -42,7 +42,7 @@ resource "azurerm_network_security_group" "security_group" {
   }
 
   security_rule {
-    name                       = "rule2"
+    name                       = "rule3"
     priority                   = 300
     direction                  = "Inbound"
     access                     = "Allow"
@@ -54,7 +54,7 @@ resource "azurerm_network_security_group" "security_group" {
   }
 
   security_rule {
-    name                       = "rule2"
+    name                       = "rule4"
     priority                   = 400
     direction                  = "Inbound"
     access                     = "Allow"

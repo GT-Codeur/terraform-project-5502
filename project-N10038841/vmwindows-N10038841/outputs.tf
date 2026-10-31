@@ -7,7 +7,7 @@ output "windows_network_interface_cards" {
 }
 
 output "windows_vm_ids" {
-  value = [for vm in azurerm_windows_virtual_machine.windows_vm : vm.id]
+  value = azurerm_windows_virtual_machine.windows_vm[*].id
 }
 
 output "windows_vm_hostnames" {
