@@ -6,6 +6,10 @@ output "linux_vm_ids" {
   value = [for vm in azurerm_linux_virtual_machine.linux_vm : vm.id]
 }
 
+output "linux_nic_ids" {
+  value = [for nic in azurerm_network_interface.linux_nic : nic.id]
+}
+
 output "linux_private_ip" {
   value = [for nic in azurerm_network_interface.linux_nic : nic.private_ip_address]
 }
