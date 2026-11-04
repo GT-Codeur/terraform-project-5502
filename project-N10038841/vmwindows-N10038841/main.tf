@@ -17,13 +17,12 @@ resource "azurerm_windows_virtual_machine" "windows_vm" {
   computer_name       = "windowsvm${count.index + 1}"
   location            = var.location
   resource_group_name = var.resource_group_name
+  zone                = count.index + 1
 
   size = var.vm_size
 
   admin_username = "adminuser"
   admin_password = "P@ssw0rd1234!"
-
-  availability_set_id = azurerm_availability_set.windows_avset.id
 
   # Maps each specific VM instance to its corresponding key-indexed network interface
   network_interface_ids = [
@@ -81,7 +80,7 @@ resource "azurerm_public_ip" "windows_pip" {
 
   allocation_method = "Static"
 
-  domain_name_label = "dns-win-${var.dns_label_suffix}"
+  domain_name_label = "dns-win-${var.dns_label_suffix}-windowsvm-${count.index + 1}"
 
   tags = var.tags
 }

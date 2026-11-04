@@ -11,8 +11,8 @@ The environment is designed to simulate a practical Azure landing zone with:
 - a dedicated resource group
 - a virtual network and subnet
 - a network security group with inbound access rules
-- three Linux virtual machines in an availability set
-- a Windows virtual machine in a separate availability set
+- three Linux virtual machines distributed across Azure Availability Zones 1, 2, and 3
+- a Windows virtual machine placed in Availability Zone 1
 - a public load balancer for the Linux tier
 - Azure storage and monitoring services
 - a PostgreSQL Flexible Server database
@@ -52,10 +52,10 @@ flowchart LR
   - WinRM / PowerShell Remoting (5985)
 
 ### Compute layer
-- 3 Linux VMs based on CentOS 8 Gen2
-- 1 Windows Server 2022 VM
-- Availability sets for Linux and Windows workloads
-- Public IPs assigned to each VM for access and connectivity validation
+- 3 Linux VMs based on CentOS 8 Gen2, placed in Zones 1, 2, and 3
+- 1 Windows Server 2022 VM placed in Zone 1
+- Zonal VM placement is used for VM fault isolation instead of attaching VMs to availability sets
+- Public IPs assigned to each VM for access and connectivity validation, with zonal public IP configuration
 - Azure Load Balancer with a frontend public IP and backend pool for Linux VMs
 
 ### Observability and platform services
@@ -168,6 +168,9 @@ These outputs are useful for validation, connectivity checks, and later operatio
 
 - The project uses the AzureRM provider with a fixed subscription ID in the provider configuration.
 - Resource names are intentionally prefixed with the project identifier N10038841.
+- Linux VMs are assigned explicit Azure zone values in the `locals.tf` map and the VM resources use the `zone` attribute to place each VM in a specific availability zone.
+- The Windows VM uses `zone = count.index + 1` so it deploys into Zone 1 in the current configuration.
+- Availability zones and availability sets are not used together on the same VM; Azure requires either zonal placement or an availability set, not both.
 - The environment uses Azure region values aligned to the project design, with the database deployed in Canada Central.
 - Tags are applied for ownership, project identification, environment classification, and expiration tracking.
 
