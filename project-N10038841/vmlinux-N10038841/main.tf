@@ -40,8 +40,7 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
   computer_name       = each.key
   location            = var.location
   resource_group_name = var.resource_group
-  availability_set_id = azurerm_availability_set.avset.id
-  depends_on          = [azurerm_availability_set.avset]
+  zone                = each.value.zone
 
   size           = var.linux_size
   admin_username = var.linux_admin_username

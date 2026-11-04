@@ -12,6 +12,10 @@ variable "disk_size_gb" {
   default     = 10
 }
 
+variable "vm_zones" {
+  type = list(string)
+}
+
 variable "tags" {
   type = map(string)
 }

@@ -117,7 +117,10 @@ module "datadisk-N10038841" {
   disk_size_gb = 10
 
   depends_on = [module.vmlinux-N10038841, module.vmwindows-N10038841]
-
+  vm_zones = concat(
+    module.vmlinux-N10038841.linux_vm_zones,
+    module.vmwindows-N10038841.windows_vm_zones
+  )
   tags = local.tags
 }
 
